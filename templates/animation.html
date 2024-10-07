@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta https-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MITM Attack</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
+</head>
+<body>
+    <div class="mask">
+        <img src="{{ url_for('static', filename='image.jpg') }}">
+    </div>
+    <canvas id="matrix"></canvas>
+    <div class="content">
+        <button id="hack-button" class="button" onclick="{{ url_for('buttons')}}">
+            You Are Hacked
+        </button>
+
+    </div>
+    <script>
+        document.getElementById('hack-button').addEventListener('click', function() {
+            window.location.href = "{{ url_for('buttons') }}";
+        });
+    </script>
+</body>
+</html>
