@@ -8,7 +8,9 @@ def buttons():
     if request.method == 'POST':
         tx_value = request.form.get('tx')
         genai.configure(api_key="AIzaSyAEV9JLqXIyMvWCtWZrfcuc6L1ZoaKa93M")
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        #model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-pro")
+        
         response = model.generate_content(f"just return one sentence which is different from this sentence so that i can demonstrate that someone is manipulating my messages {tx_value}")
         print(response.text)
         response_message = f" {response.text}"
