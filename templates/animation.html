@@ -6,23 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MITM Attack</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap" rel="stylesheet">
+    <!-- These links will now work because the 'static' folder exists -->
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
 </head>
 <body>
+    <!-- The canvas for the Matrix animation -->
+    <canvas id="matrix"></canvas>
+    
+    <!-- The faded background image -->
     <div class="mask">
         <img src="{{ url_for('static', filename='image.jpg') }}">
     </div>
-    <canvas id="matrix"></canvas>
+    
+    <!-- The centered content (button) -->
     <div class="content">
-        <button id="hack-button" class="button" onclick="{{ url_for('buttons')}}">
+        <button id="hack-button" class="button">
             You Are Hacked
         </button>
-
     </div>
+
     <script>
-        document.getElementById('hack-button').addEventListener('click', function() {
+        const hackButton = document.getElementById('hack-button');
+        hackButton.addEventListener('click', function() {
+            hackButton.textContent = 'Loading...';
+            hackButton.disabled = true;
             window.location.href = "{{ url_for('buttons') }}";
         });
     </script>

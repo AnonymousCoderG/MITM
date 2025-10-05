@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\User\Desktop\GOURI\MITM ATTACK\env"
+VIRTUAL_ENV="C:\Users\LOF 3\Desktop\Projects\MITM\MITM\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

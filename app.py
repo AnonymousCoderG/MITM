@@ -1,148 +1,218 @@
-from flask import Flask, request, render_template_string,render_template
+# import os
+# from flask import Flask, request, render_template
+# import google.generativeai as genai
+
+# app = Flask(__name__)
+
+# # --- CONFIGURATION ---
+# # This correctly loads your API key from the environment variables.
+# try:
+#     API_KEY = os.environ.get("API_KEY")
+#     if not API_KEY:
+#         raise ValueError("API_KEY environment variable not set or empty.")
+#     genai.configure(api_key=API_KEY)
+#     print(f"API Key loaded successfully, starting with: {API_KEY[:4]}...")
+# except Exception as e:
+#     print(f"!!! FATAL ERROR during initialization: {e} !!!")
+
+# # --- USER FLOW & ROUTES ---
+
+# @app.route("/")
+# def index():
+#     """
+#     Renders the animation.html page, which is the start of the user journey.
+#     """
+#     return render_template("animation.html")
+
+# @app.route("/buttons", methods=["GET", "POST"])
+# def buttons():
+#     """
+#     Handles both GET and POST requests.
+#     - GET: Shows the form for the user to enter their message.
+#     - POST: Processes the message, calls the AI, and shows the result.
+#     """
+#     if request.method == "POST":
+#         # --- This block runs when the form is submitted ---
+        
+#         # Get the text from the form's textarea (which has name="tx")
+#         tx_value = request.form.get("tx", "").strip()
+
+#         if not tx_value:
+#             response_message = "You submitted an empty message!"
+#             return render_template('chat.html', original_message="[Empty]", manipulated_message=response_message)
+
+#         try:
+#             # ================================================================= #
+#             # === THIS IS THE FINAL, CORRECTED MODEL NAME FROM YOUR LIST      === #
+#             # ================================================================= #
+#             model = genai.GenerativeModel("models/gemini-pro-latest")
+
+#             # Use the correct function to generate content.
+#             prompt = f"Return a single, different sentence that alters the meaning of this one: '{tx_value}'"
+#             response = model.generate_content(prompt)
+            
+#             response_message = response.text.strip()
+#             print("Successfully received a response from the API.")
+
+#         except Exception as e:
+#             print(f"!!! AN API ERROR OCCURRED: {e} !!!")
+#             response_message = "Error: Could not get a response from the AI model. Check server logs for details."
+        
+#         # Render the chat.html template with the original and new messages.
+#         return render_template("chat.html", 
+#                                original_message=tx_value, 
+#                                manipulated_message=response_message)
+    
+#     # --- This block runs for a GET request ---
+#     return render_template("form.html")
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
+# import os
+# from flask import Flask, request, render_template, jsonify
+# import google.generativeai as genai
+
+# app = Flask(__name__)
+
+# # --- CONFIGURATION ---
+# try:
+#     API_KEY = os.environ.get("API_KEY")
+#     if not API_KEY:
+#         raise ValueError("API_KEY environment variable not set or empty.")
+#     genai.configure(api_key=API_KEY)
+#     print(f"API Key loaded successfully, starting with: {API_KEY[:4]}...")
+# except Exception as e:
+#     print(f"!!! FATAL ERROR during initialization: {e} !!!")
+
+# # --- ROUTES ---
+
+# @app.route("/")
+# def index():
+#     """Renders the initial animation page."""
+#     return render_template("animation.html")
+
+# @app.route("/buttons")
+# def buttons():
+#     """Serves the form page."""
+#     return render_template("form.html")
+
+# @app.route("/chat")
+# def chat_page():
+#     """
+#     INSTANTLY serves the chat page.
+#     It takes the original message from the URL parameter to display it immediately.
+#     """
+#     original_message = request.args.get("original_message", "Error: No message provided.")
+#     return render_template("chat.html", original_message=original_message)
+
+# @app.route("/generate", methods=["POST"])
+# def generate():
+#     """
+#     This is now an API endpoint. JavaScript calls this in the background.
+#     It does the slow work (calling the AI) and returns ONLY the result as JSON.
+#     """
+#     data = request.get_json()
+#     tx_value = data.get("message", "")
+
+#     if not tx_value:
+#         return jsonify({"manipulated_message": "Error: No input text provided."})
+
+#     try:
+#         # Using the fast 'Flash' model for speed
+#         model = genai.GenerativeModel("models/gemini-2.5-flash")
+#         prompt = f"Return a single, different sentence that alters the meaning of this one: '{tx_value}'"
+#         response = model.generate_content(prompt)
+#         response_message = response.text.strip()
+#         print("Successfully generated response.")
+
+#     except Exception as e:
+#         print(f"!!! AN API ERROR OCCURRED: {e} !!!")
+#         response_message = "Error: Could not get a response from the AI model."
+    
+#     return jsonify({"manipulated_message": response_message})
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
+
+
+#new code to remove astricks
+import os
+from flask import Flask, request, render_template, jsonify
 import google.generativeai as genai
 
 app = Flask(__name__)
 
-@app.route('/buttons', methods = ['GET','POST'])
-def buttons():
-    if request.method == 'POST':
-        tx_value = request.form.get('tx')
-        genai.configure(api_key="AIzaSyAEV9JLqXIyMvWCtWZrfcuc6L1ZoaKa93M")
-        #model = genai.GenerativeModel("gemini-1.5-flash")
-        model = genai.GenerativeModel("gemini-1.5-pro")
-        
-        response = model.generate_content(f"just return one sentence which is different from this sentence so that i can demonstrate that someone is manipulating my messages {tx_value}")
-        print(response.text)
-        response_message = f" {response.text}"
-        if(len(tx_value) ==0):
-            response_message = f"You are dumb!"
-    
-        
-        return render_template('chat.html', 
-                           original_message=tx_value, 
-                           manipulated_message=response_message,
-                           original_message_label="Original Message",
-                           manipulated_message_label="Manipulated Message")
+# --- CONFIGURATION ---
+try:
+    API_KEY = os.environ.get("API_KEY")
+    if not API_KEY:
+        raise ValueError("API_KEY environment variable not set or empty.")
+    genai.configure(api_key=API_KEY)
+    print(f"API Key loaded successfully, starting with: {API_KEY[:4]}...")
+except Exception as e:
+    print(f"!!! FATAL ERROR during initialization: {e} !!!")
 
-        return render_template_string('''
-            <form action="/buttons" method="POST">
-                <textarea name="tx"></textarea>
-                <button type="submit" class="button">
-                    <center>Submit</center>
-                </button>
-            </form>
-            <h1>{{ message }}</h1>
-        ''', message=response_message)
-    #return render_template('animation.html')
-    # return render_template_string('''
-    #     <form action="/buttons" method="POST">
-    #         <textarea name="tx"></textarea>
-    #         <button type="submit" class="button">
-    #             <center>Submit</center>
-    #         </button>
-    #     </form>
-    # ''')
-    return render_template_string('''
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Styled Form</title>
-            <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap" rel="stylesheet">
-            <style>
-                body {
-                    font-family: 'IBM Plex Sans', sans-serif;
-                    background: #000;
-                    color: #10d210;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                }
-                .form-container {
-                    background: #0f0;
-                    color: #000;
-                    border-radius: 10px;
-                    padding: 20px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                    width: 300px;
-                    text-align: center;
-                }
-                textarea {
-                    width: 100%;
-                    height: 100px;
-                    background: #000;
-                    color: #10d210;
-                    border: 1px solid #10d210;
-                    border-radius: 5px;
-                    padding: 10px;
-                    box-sizing: border-box;
-                    resize: none;
-                    font-family: 'IBM Plex Sans', sans-serif;
-                    font-size: 16px;
-                }
-                button {
-                    background: #10d210;
-                    color: #000;
-                    border: none;
-                    border-radius: 5px;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    cursor: pointer;
-                    transition: background-color 0.3s;
-                }
-                button:hover {
-                    background: #0c8c0c;
-                }
-                button:focus {
-                    outline: none;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="form-container">
-                <form action="/buttons" method="POST">
-                    <textarea name="tx" placeholder="Enter your message here..."></textarea>
-                    <button type="submit">
-                        Submit
-                    </button>
-                </form>
-            </div>
-        </body>
-        </html>
-    ''')
+# --- ROUTES ---
 
-
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/")
 def index():
-    # if request.method == 'POST':
-    #     tx_value = request.form.get('tx')
-    #     genai.configure(api_key="AIzaSyCDEm8zz2nYtX4ziR5Edl6kzbwcoz-Kvng")
-    #     model = genai.GenerativeModel("gemini-1.5-flash")
-    #     response = model.generate_content(f"just return one sentence which is different from this sentence so that i can demonstrate that someone is manipulating my messages {tx_value}")
-    #     print(response.text)
-    #     response_message = f" {response.text}"
-    #     return render_template_string('''
-    #         <form action="/" method="POST">
-    #             <textarea name="tx"></textarea>
-    #             <button type="submit" class="button">
-    #                 <center>Submit</center>
-    #             </button>
-    #         </form>
-    #         <h1>{{ message }}</h1>
-    #     ''', message=response_message)
-    return render_template('animation.html')
-    # return render_template_string('''
-    #     <form action="/" method="POST">
-    #         <textarea name="tx"></textarea>
-    #         <button type="submit" class="button">
-    #             <center>Submit</center>
-    #         </button>
-    #     </form>
-    # ''')
+    """Renders the initial animation page."""
+    return render_template("animation.html")
 
-if __name__ == '__main__':
+@app.route("/buttons")
+def buttons():
+    """Serves the form page."""
+    return render_template("form.html")
+
+@app.route("/chat")
+def chat_page():
+    """
+    INSTANTLY serves the chat page.
+    It takes the original message from the URL parameter to display it immediately.
+    """
+    original_message = request.args.get("original_message", "Error: No message provided.")
+    return render_template("chat.html", original_message=original_message)
+
+@app.route("/generate", methods=["POST"])
+def generate():
+    """
+    This is an API endpoint. JavaScript calls this in the background.
+    It does the slow work (calling the AI) and returns ONLY the result as JSON.
+    """
+    data = request.get_json()
+    tx_value = data.get("message", "")
+
+    if not tx_value:
+        return jsonify({"manipulated_message": "Error: No input text provided."})
+
+    try:
+        # Using the fast 'Flash' model for speed
+        model = genai.GenerativeModel("models/gemini-2.5-flash")
+        
+        # ================================================================= #
+        # === BACK TO THE SIMPLER, MORE EFFECTIVE PROMPT                  === #
+        # ================================================================= #
+        prompt = f"Return a single, different sentence that alters the meaning of this one: '{tx_value}'"
+        
+        response = model.generate_content(prompt)
+        
+        # First, get the raw text from the AI
+        raw_response_text = response.text.strip()
+        
+        # ================================================================= #
+        # === NEW CODE TO RELIABLY REMOVE ASTERISKS                       === #
+        # ================================================================= #
+        cleaned_response = raw_response_text.replace("**", "")
+
+        print(f"Successfully generated response. Raw: '{raw_response_text}', Cleaned: '{cleaned_response}'")
+
+    except Exception as e:
+        print(f"!!! AN API ERROR OCCURRED: {e} !!!")
+        cleaned_response = "Error: Could not get a response from the AI model."
+    
+    return jsonify({"manipulated_message": cleaned_response})
+
+if __name__ == "__main__":
     app.run(debug=True)
